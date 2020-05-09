@@ -4,8 +4,6 @@
  * @license
  */
 
-'use strict';
-
 import 	{Row} from './row';
 
 /**

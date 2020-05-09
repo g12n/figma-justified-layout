@@ -17,12 +17,23 @@ function justifiedImageGrid(frame: ComponentNode | FrameNode) {
 	  }
 	});
   
-	let conf = { containerWidth: 100 };
+	let conf = { containerWidth: frame.width };
   
 	if (frame.getPluginData("justifiedImageGridConf") != "") {
-	  conf = JSON.parse(frame.getPluginData("justifiedImageGridConf"));
+	  let data  = JSON.parse(frame.getPluginData("justifiedImageGridConf"));
+	  conf.targetRowHeight = parseFloat(data.targetRowHeight)
+	  conf.layout= "JUSTIFIED",
+	  conf.containerPadding= parseFloat( data.containerPadding),
+	  conf.boxSpacing= parseFloat( data.boxSpacing)
+
 	}
-	conf.containerWidth = frame.width;
+	//conf.containerWidth = frame.width;
+	//conf.containerWidth = frame.width;
+	//conf.containerWidth = frame.width;
+	//conf.containerWidth = frame.width;
+	//conf.containerWidth = frame.width;
+	
+	
 	const layout = justifiedLayout(ratios, conf);
   
 	children.map((child, index) => {

@@ -156,7 +156,7 @@ Row.prototype = {
 
 				// Row with new item is us closer to target than row without;
 				// accept the new item and complete the row layout.
-				this.items.push(merge(itemData));
+				this.items.push(Object.assign(itemData));
 				this.completeLayout(rowWidthWithoutSpacing / newAspectRatio, 'justify');
 				return true;
 
@@ -593,11 +593,19 @@ function justifiedImageGrid(frame) {
             ratios.push(ratio);
         }
     });
-    let conf = { containerWidth: 100 };
+    let conf = { containerWidth: frame.width };
     if (frame.getPluginData("justifiedImageGridConf") != "") {
-        conf = JSON.parse(frame.getPluginData("justifiedImageGridConf"));
+        let data = JSON.parse(frame.getPluginData("justifiedImageGridConf"));
+        conf.targetRowHeight = parseFloat(data.targetRowHeight);
+        conf.layout = "JUSTIFIED",
+            conf.containerPadding = parseFloat(data.containerPadding),
+            conf.boxSpacing = parseFloat(data.boxSpacing);
     }
-    conf.containerWidth = frame.width;
+    //conf.containerWidth = frame.width;
+    //conf.containerWidth = frame.width;
+    //conf.containerWidth = frame.width;
+    //conf.containerWidth = frame.width;
+    //conf.containerWidth = frame.width;
     const layout = justifiedLayout(ratios, conf);
     children.map((child, index) => {
         if ("x" in child) {
