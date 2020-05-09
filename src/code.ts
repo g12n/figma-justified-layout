@@ -4,6 +4,24 @@
 import justifiedLayout from './lib/justified-layout';
 
 
+
+interface JustifiedLayout {
+	containerWidth:number;
+	targetRowHeight: number;
+	layout: string;
+	containerPadding: number;
+	boxSpacing: number;
+  }
+  
+  const defaultLayout: JustifiedLayout = {
+	containerWidth:100,  
+	targetRowHeight: 10,
+	layout: "JUSTIFIED",
+	containerPadding: 10,
+	boxSpacing: 10
+  };
+  
+
 function justifiedImageGrid(frame: ComponentNode | FrameNode) {
 	const children = frame.children.slice(0).reverse();
 	const ratios = [];
@@ -17,7 +35,12 @@ function justifiedImageGrid(frame: ComponentNode | FrameNode) {
 	  }
 	});
   
-	let conf = { containerWidth: frame.width };
+	let conf: JustifiedLayout  = { 
+		containerWidth: frame.width ,
+		targetRowHeight: 10,
+		layout: "JUSTIFIED",
+		containerPadding: 10,
+		boxSpacing: 10};
   
 	if (frame.getPluginData("justifiedImageGridConf") != "") {
 	  let data  = JSON.parse(frame.getPluginData("justifiedImageGridConf"));
@@ -27,13 +50,6 @@ function justifiedImageGrid(frame: ComponentNode | FrameNode) {
 	  conf.boxSpacing= parseFloat( data.boxSpacing)
 
 	}
-	//conf.containerWidth = frame.width;
-	//conf.containerWidth = frame.width;
-	//conf.containerWidth = frame.width;
-	//conf.containerWidth = frame.width;
-	//conf.containerWidth = frame.width;
-	
-	
 	const layout = justifiedLayout(ratios, conf);
   
 	children.map((child, index) => {
@@ -46,30 +62,7 @@ function justifiedImageGrid(frame: ComponentNode | FrameNode) {
 	});
   
 	frame.resizeWithoutConstraints(frame.width, layout.containerHeight);
-  }
-
-
-
-
-  interface JustifiedLayout {
-	targetRowHeight: number;
-	layout: string;
-	containerPadding: number;
-	boxSpacing: number;
-  }
-  
-  const defaultLayout: JustifiedLayout = {
-	targetRowHeight: 10,
-	layout: "JUSTIFIED",
-	containerPadding: 10,
-	boxSpacing: 10
-  };
-  
-
-
-
-
-
+}
 
 // This plugin will open a modal to prompt the user to enter a number, and
 // it will then create that many rectangles on the screen.
@@ -96,15 +89,11 @@ figma.ui.onmessage = msg => {
 	if (msg.type === 'update-layout') {
 
 		msg.nodes.map(node =>{
-			
 			let frameNode = figma.getNodeById(node.id)
 			if (frameNode.type === "FRAME" || node.type === "COMPONENT") {
 				frameNode.setPluginData("justifiedImageGridConf", JSON.stringify(node.settings) )
 				justifiedImageGrid(frameNode)
-
 			}
-
-
 		})
 	//	const nodes: SceneNode[] = [];
 	//	figma.currentPage.selection = nodes;

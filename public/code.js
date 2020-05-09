@@ -593,7 +593,13 @@ function justifiedImageGrid(frame) {
             ratios.push(ratio);
         }
     });
-    let conf = { containerWidth: frame.width };
+    let conf = {
+        containerWidth: frame.width,
+        targetRowHeight: 10,
+        layout: "JUSTIFIED",
+        containerPadding: 10,
+        boxSpacing: 10
+    };
     if (frame.getPluginData("justifiedImageGridConf") != "") {
         let data = JSON.parse(frame.getPluginData("justifiedImageGridConf"));
         conf.targetRowHeight = parseFloat(data.targetRowHeight);
@@ -601,11 +607,6 @@ function justifiedImageGrid(frame) {
             conf.containerPadding = parseFloat(data.containerPadding),
             conf.boxSpacing = parseFloat(data.boxSpacing);
     }
-    //conf.containerWidth = frame.width;
-    //conf.containerWidth = frame.width;
-    //conf.containerWidth = frame.width;
-    //conf.containerWidth = frame.width;
-    //conf.containerWidth = frame.width;
     const layout = justifiedLayout(ratios, conf);
     children.map((child, index) => {
         if ("x" in child) {
@@ -650,4 +651,3 @@ figma.ui.onmessage = msg => {
     // keep running, which shows the cancel button at the bottom of the screen.
     //figma.closePlugin();
 };
-//# sourceMappingURL=code.js.map
