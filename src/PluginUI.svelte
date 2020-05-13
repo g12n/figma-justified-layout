@@ -3,16 +3,9 @@
 	//import Global CSS from the svelte boilerplate
 	//contains Figma color vars, spacing vars, utility classes and more
 	import { GlobalCSS } from 'figma-plugin-ds-svelte';
-
 	//import some Svelte Figma UI components
 	import { Button, Input, Label,Section, SelectMenu, Type,IconSpacing,IconHorizontalPadding } from 'figma-plugin-ds-svelte';
 
-	//menu items, this is an array of objects to populate to our select menus
-	let menuItems = [
-        { 'value': 'rectangle', 'label': 'Rectangle', 'group': null, 'selected': false },
-        { 'value': 'triangle', 'label': 'Triangle ', 'group': null, 'selected': false },
-        { 'value': 'circle', 'label': 'Circle', 'group': null, 'selected': false }
-	];
 	
 	const settings = {
 		targetRowHeight: 10,
@@ -21,22 +14,15 @@
 		boxSpacing: 10
 	}
 
-
-	var disabled = true;
 	var selectedShape;
-	var count = 5;
 
 	var nodes  = [];
 
 	window.onmessage = async (event) => {
  		nodes = []
 		event.data.pluginMessage.map(node =>{	
-			node.settings = {
-				targetRowHeight: 200,
-				layout: "JUSTIFIED",
-				containerPadding: 20,
-				boxSpacing: 20
-			}
+			console.log(node)
+	
 			nodes.push(node)
 		})
 	}
