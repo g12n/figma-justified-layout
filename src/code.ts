@@ -38,6 +38,8 @@ function justifiedImageGrid(frame: ComponentNode | FrameNode) {
 	const children = frame.children.slice(0).reverse();
 	const ratios = [];
 
+	console.log("justifiedImageGrid")
+
 	children.map((child, index) => {
 	  if ("x" in child) {
 		let ratio = child.width / child.height;
@@ -99,12 +101,16 @@ figma.on("selectionchange", () => {
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 figma.ui.onmessage = msg => {
+
 	// One way of distinguishing between different types of messages sent from
 	// your HTML page is to use an object with a "type" property like this.
 	if (msg.type === 'update-layout') {
+		
 		msg.nodes.map(node =>{
+			
 			let frameNode = figma.getNodeById(node.id)
-			if (frameNode.type === "FRAME" || node.type === "COMPONENT") {
+			
+			if (frameNode.type === "FRAME" || frameNode.type === "COMPONENT") {
 				frameNode.setPluginData("justifiedImageGridConf", JSON.stringify(node.settings) )
 				justifiedImageGrid(frameNode)
 			}
