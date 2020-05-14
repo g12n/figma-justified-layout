@@ -581,9 +581,27 @@ function justifiedLayout (input, config) {
 }
 
 //import justifiedImageGrid from "./justified-image-grid";
+const parsePluginData = (node) => {
+    let conf = {
+        containerWidth: node.width,
+        targetRowHeight: 10,
+        layout: "JUSTIFIED",
+        containerPadding: 10,
+        boxSpacing: 10
+    };
+    if (node.getPluginData("justifiedImageGridConf") != "") {
+        let data = JSON.parse(node.getPluginData("justifiedImageGridConf"));
+        conf.targetRowHeight = parseFloat(data.targetRowHeight);
+        conf.layout = "JUSTIFIED",
+            conf.containerPadding = parseFloat(data.containerPadding),
+            conf.boxSpacing = parseFloat(data.boxSpacing);
+    }
+    return conf;
+};
 function justifiedImageGrid(frame) {
     const children = frame.children.slice(0).reverse();
     const ratios = [];
+    console.log("justifiedImageGrid");
     children.map((child, index) => {
         if ("x" in child) {
             let ratio = child.width / child.height;
@@ -593,20 +611,7 @@ function justifiedImageGrid(frame) {
             ratios.push(ratio);
         }
     });
-    let conf = {
-        containerWidth: frame.width,
-        targetRowHeight: 10,
-        layout: "JUSTIFIED",
-        containerPadding: 10,
-        boxSpacing: 10
-    };
-    if (frame.getPluginData("justifiedImageGridConf") != "") {
-        let data = JSON.parse(frame.getPluginData("justifiedImageGridConf"));
-        conf.targetRowHeight = parseFloat(data.targetRowHeight);
-        conf.layout = "JUSTIFIED",
-            conf.containerPadding = parseFloat(data.containerPadding),
-            conf.boxSpacing = parseFloat(data.boxSpacing);
-    }
+    let conf = parsePluginData(frame);
     const layout = justifiedLayout(ratios, conf);
     children.map((child, index) => {
         if ("x" in child) {
@@ -618,6 +623,18 @@ function justifiedImageGrid(frame) {
     });
     frame.resizeWithoutConstraints(frame.width, layout.containerHeight);
 }
+let updateSelection = () => {
+    let nodes = [];
+    figma.currentPage.selection.map(node => {
+        if (node.type === "FRAME" || node.type === "COMPONENT") {
+            nodes.push({
+                id: node.id,
+                settings: parsePluginData(node)
+            });
+        }
+    });
+    figma.ui.postMessage(nodes);
+};
 // This plugin will open a modal to prompt the user to enter a number, and
 // it will then create that many rectangles on the screen.
 // This file holds the main code for the plugins. It has access to the *document*.
@@ -625,9 +642,9 @@ function justifiedImageGrid(frame) {
 // full browser enviroment (see documentation).
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__, { width: 232, height: 208 });
-figma.ui.postMessage(figma.currentPage.selection);
+updateSelection();
 figma.on("selectionchange", () => {
-    figma.ui.postMessage(figma.currentPage.selection);
+    updateSelection();
 });
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
@@ -638,7 +655,7 @@ figma.ui.onmessage = msg => {
     if (msg.type === 'update-layout') {
         msg.nodes.map(node => {
             let frameNode = figma.getNodeById(node.id);
-            if (frameNode.type === "FRAME" || node.type === "COMPONENT") {
+            if (frameNode.type === "FRAME" || frameNode.type === "COMPONENT") {
                 frameNode.setPluginData("justifiedImageGridConf", JSON.stringify(node.settings));
                 justifiedImageGrid(frameNode);
             }
