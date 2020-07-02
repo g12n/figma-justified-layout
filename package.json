@@ -22,7 +22,7 @@
     "rollup-plugin-typescript": "^1.0.1",
     "svelte": "^3.23.2",
     "tslib": "^2.0.0",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.6"
   },
   "dependencies": {
     "@figma/plugin-typings": "^1.15.0",
