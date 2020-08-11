@@ -25,7 +25,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@figma/plugin-typings": "^1.15.0",
+    "@figma/plugin-typings": "^1.16.1",
     "sirv-cli": "^1.0.5"
   }
 }
