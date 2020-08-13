@@ -26,6 +26,6 @@
   },
   "dependencies": {
     "@figma/plugin-typings": "^1.16.1",
-    "sirv-cli": "^1.0.5"
+    "sirv-cli": "^1.0.6"
   }
 }
